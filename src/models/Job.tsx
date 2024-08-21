@@ -85,23 +85,23 @@ const Jobs: React.FC<JobsProps> = ({ jobs }) => {
     return (
         <div>
             {jobs.map((job) => (
-                    <div key={job._id} className="job-card">
-                <h2>{job.title}</h2>
-                <p>{job.description}</p>
-                <p>
-                {job.city}, {job.state}, {job.country}
-    </p>
-    <p>Salary: ${job.salary}</p>
-    <p>
-    Contact: {job.contactName} - {job.contactEmail}
-    </p>
-    {job.jobIcon && (
-        <Image src={job.jobIcon} alt={`${job.title} icon`} width={100} height={100} />
-    )}
-    </div>
-))}
-    </div>
-);
+                <div key={job._id} className="job-card">
+                    <h2>{job.title}</h2>
+                    <p>{job.description}</p>
+                    <p>
+                        {job.city}, {job.state}, {job.country}
+                    </p>
+                    <p>Salary: ${job.salary}</p>
+                    <p>
+                        Contact: {job.contactName} - {job.contactEmail}
+                    </p>
+                    {job.jobIcon && (
+                        <Image src={job.jobIcon} alt={`${job.title} icon`} width={100} height={100} />
+                    )}
+                </div>
+            ))}
+        </div>
+    );
 };
 
 export default Jobs;

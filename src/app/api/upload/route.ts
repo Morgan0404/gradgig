@@ -24,6 +24,7 @@ export async function POST(req: NextRequest){
 
     // blob data of our file
     const chunks = [];
+    // @ts-ignore
     for await (const chunk of file.stream()){
         chunks.push(chunk);
 

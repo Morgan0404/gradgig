@@ -1,5 +1,6 @@
 import {PutObjectCommand, S3Client} from "@aws-sdk/client-s3";
 import {NextRequest} from "next/server";
+// @ts-ignore
 import uniqid from 'uniqid';
 
 

@@ -7,8 +7,6 @@ import {saveJobAction} from "@/app/actions/jobActions";
 import{redirect} from "next/navigation";
 import "react-country-state-city/dist/react-country-state-city.css";
 import type {Job} from "@/models/Job";
-// @ts-ignore
-// @ts-ignore
 import {
     CitySelect,
     CountrySelect,

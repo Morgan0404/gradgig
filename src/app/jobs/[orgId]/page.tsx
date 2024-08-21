@@ -1,7 +1,7 @@
 import Jobs from "@/app/components/Jobs";
 import {getUser} from "@workos-inc/authkit-nextjs";
 import mongoose from "mongoose";
-import { JobModel, addOrgAndUserData } from "@/models/job";
+import { JobModel, addOrgAndUserData } from "@/models/Job";
 import {AutoPaginatable, OrganizationMembership, WorkOS} from "@workos-inc/node";
 
 

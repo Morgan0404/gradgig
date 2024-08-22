@@ -7,7 +7,10 @@ export default async function Header() {
     return (
         <header>
             <div className="container flex items-center justify-between mx-auto my-4">
-                <Link href={'/'} className="font-bold text-xl">Grad Gig</Link>
+                <div className="flex items-center gap-4">
+                    <Link href={'/'} className="font-bold text-2xl">Grad Gig</Link>
+                    <Link href={'/about'} className="rounded-md bg-gray-200 py-2 px-4 text-center"> About us </Link>
+                </div>
                 <nav className="flex gap-2">
                     {!user && (
                         <Link className="rounded-md bg-gray-200 py-2 px-4 rounded-md text-center" href={signInUrl}>

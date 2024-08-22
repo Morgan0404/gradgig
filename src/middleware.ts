@@ -13,5 +13,6 @@ export const config = {
         '/jobs/:orgId*',
         '/jobs/edit/:jobId*',
         '/show/:jobId*',
+        '/about',
     ]
 };

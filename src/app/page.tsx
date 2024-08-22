@@ -13,7 +13,6 @@ export default async function Home() {
     );
     return (
         <>
-            <Hero />
             <Jobs header={''} jobs={latestJobs} />
         </>
     );

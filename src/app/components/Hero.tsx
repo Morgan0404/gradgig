@@ -4,7 +4,7 @@ export default function Hero() {
     return(
        <section className="container my-16">
            <h1 className="text-4xl font-bold text-center">
-               Find your next <br/> dream job
+               Find your next <br/> Graduate Job here
            </h1>
            <p className="text-center text-gray-700 mt-2">
            </p>

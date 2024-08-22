@@ -2,10 +2,15 @@
 
 import { useState } from "react";
 
-export default function Hero({ onSearch }) {
+// Define the type for the onSearch function
+type HeroProps = {
+    onSearch: (searchTerm: string) => void;
+};
+
+export default function Hero({ onSearch }: HeroProps) {
     const [searchTerm, setSearchTerm] = useState("");
 
-    const handleSearch = (event) => {
+    const handleSearch = (event: React.FormEvent) => {
         event.preventDefault();
         if (onSearch) {
             onSearch(searchTerm);

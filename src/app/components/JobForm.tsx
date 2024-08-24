@@ -28,17 +28,32 @@ export default function JobForm({orgId,jobDoc}:{orgId:string;jobDoc?:Job}){
     const[countryName, setCountryName] = useState(jobDoc?.country || '');
     const[stateName, setStateName] = useState(jobDoc?.state||'');
     const[cityName, setCityName]= useState(jobDoc?.city||'');
-    async function handleSaveJob(data:FormData){
-        data.set('country',countryName.toString());
-        data.set('state',stateName.toString());
-        data.set('city', cityName.toString());
-        data.set('countryId',countryid.toString());
-        data.set('stateId',stateid.toString());
-        data.set('cityId', cityId.toString());
-        data.set('orgId',orgId)
 
-        const jobDoc = await saveJobAction(data);
-        redirect(`/jobs/${jobDoc.orgId}`);
+    if (!orgId || orgId === 'undefined') {
+        alert("Organization ID is missing or invalid. Please ensure you are logged in and associated with an organization.");
+        return;
+    }
+
+    async function handleSaveJob(data: FormData) {
+        try {
+            if (!orgId || orgId === 'undefined') {
+                throw new Error("Organization ID is missing or invalid.");
+            }
+
+            data.set('country', countryName.toString());
+            data.set('state', stateName.toString());
+            data.set('city', cityName.toString());
+            data.set('countryId', countryid.toString());
+            data.set('stateId', stateid.toString());
+            data.set('cityId', cityId.toString());
+            data.set('orgId', orgId);
+
+            const jobDoc = await saveJobAction(data);
+            redirect(`/jobs/${jobDoc.orgId}`);
+        } catch (error) {
+            // @ts-ignore
+            alert("Failed to save job. " + error.message);
+        }
     }
 
     return(

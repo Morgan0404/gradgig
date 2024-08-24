@@ -36,6 +36,8 @@ export default function JobForm({orgId,jobDoc}:{orgId:string;jobDoc?:Job}){
 
     async function handleSaveJob(data: FormData) {
         try {
+            console.log("Organization ID:", orgId);
+
             if (!orgId || orgId === 'undefined') {
                 throw new Error("Organization ID is missing or invalid.");
             }

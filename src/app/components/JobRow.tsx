@@ -1,18 +1,22 @@
 'use client';
 import TimeAgo from "@/app/components/TimeAgo";
 import { Job } from "@/models/Job";
-import { faHeart } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import Link from "next/link";
 
 export default function JobRow({ jobDoc }: { jobDoc: Job }) {
     return (
         <div className="bg-white p-4 rounded-lg shadow-sm relative">
-            <div className="absolute cursor-pointer top-4 right-4">
-                <FontAwesomeIcon className="size-4 text-gray-300" icon={faHeart} />
+            {/* Apply Button in place of the heart icon */}
+            <div className="absolute top-4 right-4">
+                <a
+                    href={`mailto:${jobDoc.contactEmail}?subject=Portfolio Enquiry`}
+                    className="text-white bg-gradient-to-br from-gray-500 to-gray-900 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 py-2 px-4 rounded-md"
+                >
+                    Apply now !
+                </a>
             </div>
-            <div className="flex grow gap-4">
+            <div className="flex grow gap-2">
                 <div className="content-center w-12 basis-12 shrink-0">
                     <img
                         className="size-12"

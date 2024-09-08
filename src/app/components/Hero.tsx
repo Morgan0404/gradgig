@@ -35,7 +35,8 @@ export default function Hero({ onSearch }: HeroProps) {
                 <input
                     type="search"
                     className="border border-gray-400 w-full py-2 px-3 rounded-md"
-                    placeholder="Search phrase..."
+                    placeholder="Search for your dream job
+                    "
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />

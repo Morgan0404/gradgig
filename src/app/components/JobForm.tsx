@@ -1,4 +1,4 @@
-'use client';  // Mark the component as a client component
+'use client';
 
 import { useParams } from 'next/navigation';  // Use useParams to get dynamic route parameters
 import { useEffect, useState } from 'react';
@@ -13,21 +13,29 @@ export default function JobForm({ jobDoc }: { jobDoc?: any }) {
     const params = useParams();  // Use useParams to access URL params
     const [orgId, setOrgId] = useState<string | undefined>(undefined);
     const [loading, setLoading] = useState(true);  // Set initial loading state
-    const [countryid, setCountryid] = useState(jobDoc?.countryId || 0);
-    const [stateid, setStateid] = useState(jobDoc?.stateId || 0);
-    const [cityId, setCityId] = useState(jobDoc?.cityId || 0);
+    const [countryid, setCountryid] = useState(jobDoc?.countryId || '');
+    const [stateid, setStateid] = useState(jobDoc?.stateId || '');
+    const [cityId, setCityId] = useState(jobDoc?.cityId || '');
     const [countryName, setCountryName] = useState(jobDoc?.country || '');
     const [stateName, setStateName] = useState(jobDoc?.state || '');
     const [cityName, setCityName] = useState(jobDoc?.city || '');
+    const [title, setTitle] = useState(jobDoc?.title || '');
+    const [description, setDescription] = useState(jobDoc?.description || '');
+    const [remote, setRemote] = useState(jobDoc?.remote || 'onsite');
+    const [type, setType] = useState(jobDoc?.type || 'full');
+    const [salary, setSalary] = useState(jobDoc?.salary || '');
+    const [jobIcon, setJobIcon] = useState(jobDoc?.jobIcon || '');
+    const [contactPhoto, setContactPhoto] = useState(jobDoc?.contactPhoto || '');
+    const [contactName, setContactName] = useState(jobDoc?.contactName || '');
+    const [contactPhone, setContactPhone] = useState(jobDoc?.contactPhone || '');
+    const [contactEmail, setContactEmail] = useState(jobDoc?.contactEmail || '');
 
-    // useEffect to ensure that orgId is set only after the component is mounted
     useEffect(() => {
-        const pathOrgId = params.orgId;  // Extract orgId from the URL params
+        const pathOrgId = params?.orgId;  // Extract orgId from the URL params
         console.log('Extracted orgId from URL params:', pathOrgId);  // Debugging: log orgId
 
-        // Ensure orgId is a string, handle arrays
         if (typeof pathOrgId === 'string') {
-            setOrgId(pathOrgId); // Set the orgId from the path
+            setOrgId(pathOrgId);  // Set the orgId from the path
             setLoading(false);  // Exit the loading state
         } else if (Array.isArray(pathOrgId)) {
             setOrgId(pathOrgId[0]);  // Take the first element if it's an array
@@ -38,9 +46,8 @@ export default function JobForm({ jobDoc }: { jobDoc?: any }) {
         }
     }, [params]);
 
-    // Handle the case when orgId is not yet available or there's a loading issue
     if (loading) {
-        return <div>Loading...</div>; // Show a loading state until orgId is available
+        return <div>Loading...</div>;  // Show a loading state until orgId is available
     }
 
     if (!orgId) {
@@ -57,13 +64,23 @@ export default function JobForm({ jobDoc }: { jobDoc?: any }) {
             return;
         }
 
-        data.set('country', countryName.toString());
-        data.set('state', stateName.toString());
-        data.set('city', cityName.toString());
+        data.set('title', title);
+        data.set('description', description);
+        data.set('remote', remote);
+        data.set('type', type);
+        data.set('salary', salary.toString());
+        data.set('country', countryName);
+        data.set('state', stateName);
+        data.set('city', cityName);
         data.set('countryId', countryid.toString());
         data.set('stateId', stateid.toString());
         data.set('cityId', cityId.toString());
-        data.set('orgId', orgId || ''); // Ensure orgId is defined, fallback to empty string
+        data.set('jobIcon', jobIcon);
+        data.set('contactPhoto', contactPhoto);
+        data.set('contactName', contactName);
+        data.set('contactPhone', contactPhone);
+        data.set('contactEmail', contactEmail);
+        data.set('orgId', orgId || '');  // Ensure orgId is defined, fallback to empty string
 
         console.log("Saving job with data:", Object.fromEntries(data.entries()));
 
@@ -78,18 +95,18 @@ export default function JobForm({ jobDoc }: { jobDoc?: any }) {
         <Theme>
             <form
                 onSubmit={(e) => {
-                    e.preventDefault(); // Prevent default form submission behavior
-                    const formData = new FormData(e.currentTarget); // Capture form data
-                    handleSaveJob(formData); // Call save function
+                    e.preventDefault();  // Prevent default form submission behavior
+                    const formData = new FormData(e.currentTarget);  // Capture form data
+                    handleSaveJob(formData);  // Call save function
                 }}
                 className="container mt-6 flex flex-col gap-4"
             >
-                <TextField.Root name="title" placeholder="Job title" defaultValue={jobDoc?.title || ''} />
+                <TextField.Root name="title" placeholder="Job title" defaultValue={title} onChange={(e) => setTitle(e.target.value)} />
 
                 <div className="grid sm:grid-cols-3 gap-6 *:grow">
                     <div>
                         Remote?
-                        <RadioGroup.Root defaultValue={jobDoc?.remote || 'hybrid'} name="remote">
+                        <RadioGroup.Root defaultValue={remote} name="remote" onValueChange={(value) => setRemote(value)}>
                             <RadioGroup.Item value="onsite">On-site</RadioGroup.Item>
                             <RadioGroup.Item value="hybrid">Hybrid-remote</RadioGroup.Item>
                             <RadioGroup.Item value="remote">Fully remote</RadioGroup.Item>
@@ -97,7 +114,7 @@ export default function JobForm({ jobDoc }: { jobDoc?: any }) {
                     </div>
                     <div>
                         Full time?
-                        <RadioGroup.Root defaultValue={jobDoc?.type || 'full'} name="type">
+                        <RadioGroup.Root defaultValue={type} name="type" onValueChange={(value) => setType(value)}>
                             <RadioGroup.Item value="project">Project</RadioGroup.Item>
                             <RadioGroup.Item value="part">Part-time</RadioGroup.Item>
                             <RadioGroup.Item value="full">Full-time</RadioGroup.Item>
@@ -105,7 +122,7 @@ export default function JobForm({ jobDoc }: { jobDoc?: any }) {
                     </div>
                     <div>
                         Salary
-                        <TextField.Root name="salary" defaultValue={jobDoc?.salary || ''}>
+                        <TextField.Root name="salary" defaultValue={salary} onChange={(e) => setSalary(e.target.value)}>
                             <TextField.Slot>$</TextField.Slot>
                             <TextField.Slot>K/year</TextField.Slot>
                         </TextField.Root>
@@ -148,19 +165,30 @@ export default function JobForm({ jobDoc }: { jobDoc?: any }) {
                 <div className="sm:flex">
                     <div className="w-1/3">
                         <h3>Job icon</h3>
-                        <ImageUpload name="jobIcon" icon={faStar} defaultValue={jobDoc?.jobIcon || ''} />
+                        <ImageUpload
+                            name="jobIcon"
+                            icon={faStar}
+                            defaultValue={jobIcon}
+                            onUpload={(url: string) => setJobIcon(url)}  // Pass the uploaded URL to setJobIcon state
+                        />
                     </div>
                     <div className="grow">
                         <h3>Contact person</h3>
                         <div className="flex gap-2">
                             <div>
-                                <ImageUpload name="contactPhoto" icon={faUser} defaultValue={jobDoc?.contactPhoto || ''} />
+                                <ImageUpload
+                                    name="contactPhoto"
+                                    icon={faUser}
+                                    defaultValue={contactPhoto}
+                                    onUpload={(url: string) => setContactPhoto(url)}  // Pass the uploaded URL to setContactPhoto state
+                                />
                             </div>
                             <div className="grow flex flex-col gap-1">
                                 <TextField.Root
                                     placeholder="John Doe"
                                     name="contactName"
-                                    defaultValue={jobDoc?.contactName || ''}
+                                    defaultValue={contactName}
+                                    onChange={(e) => setContactName(e.target.value)}
                                 >
                                     <TextField.Slot>
                                         <FontAwesomeIcon icon={faUser} />
@@ -170,7 +198,8 @@ export default function JobForm({ jobDoc }: { jobDoc?: any }) {
                                     placeholder="Phone"
                                     type="tel"
                                     name="contactPhone"
-                                    defaultValue={jobDoc?.contactPhone || ''}
+                                    defaultValue={contactPhone}
+                                    onChange={(e) => setContactPhone(e.target.value)}
                                 >
                                     <TextField.Slot>
                                         <FontAwesomeIcon icon={faPhone} />
@@ -180,7 +209,8 @@ export default function JobForm({ jobDoc }: { jobDoc?: any }) {
                                     placeholder="Email"
                                     type="email"
                                     name="contactEmail"
-                                    defaultValue={jobDoc?.contactEmail || ''}
+                                    defaultValue={contactEmail}
+                                    onChange={(e) => setContactEmail(e.target.value)}
                                 >
                                     <TextField.Slot>
                                         <FontAwesomeIcon icon={faEnvelope} />
@@ -192,10 +222,11 @@ export default function JobForm({ jobDoc }: { jobDoc?: any }) {
                 </div>
 
                 <TextArea
-                    defaultValue={jobDoc?.description || ''}
+                    defaultValue={description}
                     placeholder="Job description"
                     resize="vertical"
                     name="description"
+                    onChange={(e) => setDescription(e.target.value)}
                 />
 
                 <div className="flex justify-center">

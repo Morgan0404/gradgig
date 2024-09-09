@@ -13,7 +13,7 @@ export default function JobRow({ jobDoc }: { jobDoc: Job }) {
                     href={`mailto:${jobDoc.contactEmail}?subject=Portfolio Enquiry`}
                     className="text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 py-2 px-4 rounded-md "
                 >
-                    Apply now !
+                    Apply
                 </a>
             </div>
             <div className="flex grow gap-2">

@@ -21,10 +21,10 @@ export default function JobForm({ jobDoc }: { jobDoc?: any }) {
 
     // useEffect to ensure that orgId is set only after the component is mounted
     useEffect(() => {
-        const orgId = searchParams.get('orgId');  // Extract orgId from query params
+        const orgIdFromParams = searchParams.get('orgId');  // Extract orgId from query params
 
-        if (orgId) {
-            setOrgId(orgId); // Set the orgId from the query parameter
+        if (orgIdFromParams) {
+            setOrgId(orgIdFromParams); // Set the orgId from the query parameter
         }
     }, [searchParams]);
 
@@ -49,7 +49,7 @@ export default function JobForm({ jobDoc }: { jobDoc?: any }) {
         data.set('countryId', countryid.toString());
         data.set('stateId', stateid.toString());
         data.set('cityId', cityId.toString());
-        data.set('orgId', orgId); // Use the orgId extracted from the query parameters
+        data.set('orgId', orgId || ''); // Ensure orgId is defined, fallback to empty string
 
         console.log("Saving job with data:", Object.fromEntries(data.entries()));
 

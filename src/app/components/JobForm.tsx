@@ -1,3 +1,5 @@
+'use client';  // Mark the component as a client component
+
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Button, RadioGroup, TextArea, TextField, Theme } from "@radix-ui/themes";
@@ -18,18 +20,12 @@ export default function JobForm({ jobDoc }: { jobDoc?: any }) {
     const [cityName, setCityName] = useState(jobDoc?.city || '');
 
     // useEffect to ensure that orgId is set only after the component is mounted
-    // @ts-ignore
-    // @ts-ignore
-    // @ts-ignore
     useEffect(() => {
-        // @ts-ignore
         const { orgId } = router.query;
 
         if (orgId) {
             setOrgId(orgId as string); // Cast to string if it's present
         }
-        // @ts-ignore
-
     }, [router.query]);
 
     // Handle the case when orgId is not yet available

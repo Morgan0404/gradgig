@@ -1,7 +1,7 @@
 'use client';  // Ensure this file is a client component
 
 import { Button, RadioGroup, Text, TextArea, TextField, Theme } from "@radix-ui/themes";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from 'next/navigation';  // Updated useRouter for app directory
 import "react-country-state-city/dist/react-country-state-city.css";
 
@@ -16,9 +16,8 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faMobile, faPhone, faStar, faUser } from "@fortawesome/free-solid-svg-icons";
 import ImageUpload from "@/app/components/ImageUpload";
-import Link from 'next/link';  // Use Link for navigation
 
-export default function JobForm({ orgId, jobDoc }: { orgId: string; jobDoc?: Job }) {
+export default function JobForm({ jobDoc }: { jobDoc?: Job }) {
     const [countryid, setCountryid] = useState(jobDoc?.countryId || 0);
     const [stateid, setStateid] = useState(jobDoc?.stateId || 0);
     const [cityId, setCityId] = useState(jobDoc?.cityId || 0);
@@ -26,47 +25,60 @@ export default function JobForm({ orgId, jobDoc }: { orgId: string; jobDoc?: Job
     const [stateName, setStateName] = useState(jobDoc?.state || '');
     const [cityName, setCityName] = useState(jobDoc?.city || '');
 
-    const router = useRouter();  // Use next/navigation in the app directory
+    const router = useRouter();
+    // @ts-ignore
+    const orgId = router.query.orgId;  // Extract orgId from the URL
 
+    // Log the orgId for debugging
+    useEffect(() => {
+        console.log("Extracted Organization ID from URL:", orgId);
+    }, [orgId]);
+
+    // Ensure orgId is not undefined or missing
     if (!orgId || orgId === 'undefined') {
         return <Text color="red">Invalid Organization ID. Please log in or select an organization.</Text>;
     }
 
     async function handleSaveJob(data: FormData) {
-        try {
-            if (!orgId || orgId === 'undefined') {
-                throw new Error("Organization ID is missing or invalid.");
-            }
+        // Log to check if the orgId is passed correctly
+        console.log("Handling save with Organization ID:", orgId);
 
-            if (!stateName) {
-                throw new Error("State is required.");
-            }
-            if (!cityName) {
-                throw new Error("City is required.");
-            }
-
-            data.set('country', countryName.toString());
-            data.set('state', stateName.toString());
-            data.set('city', cityName.toString());
-            data.set('countryId', countryid.toString());
-            data.set('stateId', stateid.toString());
-            data.set('cityId', cityId.toString());
-            data.set('orgId', orgId);
-
-            const jobDoc = await saveJobAction(data);
-
-            // Use router.replace to update the URL without navigating
-            router.replace(`/jobs/${jobDoc.orgId}`);
-        } catch (error) {
-            // @ts-ignore
-            console.error("Failed to save job:", error.message);
+        // Check required fields
+        if (!stateName) {
+            console.error("State is required.");
+            return;
         }
+        if (!cityName) {
+            console.error("City is required.");
+            return;
+        }
+
+        // Set form data fields
+        data.set('country', countryName.toString());
+        data.set('state', stateName.toString());
+        data.set('city', cityName.toString());
+        data.set('countryId', countryid.toString());
+        data.set('stateId', stateid.toString());
+        data.set('cityId', cityId.toString());
+        data.set('orgId', orgId);  // Use the orgId extracted from URL
+
+        console.log("Saving job with data:", Object.fromEntries(data.entries()));
+
+        // Save job using the action
+        const jobDoc = await saveJobAction(data);
+
+        // Redirect after saving
+        router.replace(`/jobs/${jobDoc.orgId}`);
     }
 
     return (
         <Theme>
             <form
-                action={handleSaveJob}
+                onSubmit={(e) => {
+                    e.preventDefault();  // Prevent default form submission behavior
+                    const formData = new FormData(e.currentTarget);  // Capture form data
+                    handleSaveJob(formData);  // Call save function
+                }}
                 className="container mt-6 flex flex-col gap-4"
             >
                 {jobDoc && (

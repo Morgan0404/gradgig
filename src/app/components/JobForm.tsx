@@ -31,8 +31,8 @@ export default function JobForm({ jobDoc }: { jobDoc?: any }) {
     const [contactEmail, setContactEmail] = useState(jobDoc?.contactEmail || '');
 
     useEffect(() => {
+        console.log('Params object:', params);  // Log the params object to see if orgId is present
         const pathOrgId = params?.orgId;  // Extract orgId from the URL params
-        console.log('Extracted orgId from URL params:', pathOrgId);  // Debugging: log orgId
 
         if (typeof pathOrgId === 'string') {
             setOrgId(pathOrgId);  // Set the orgId from the path

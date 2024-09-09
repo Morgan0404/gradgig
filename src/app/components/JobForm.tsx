@@ -1,6 +1,6 @@
 'use client';  // Mark the component as a client component
 
-import { useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';  // Use useSearchParams to get query parameters
 import { useEffect, useState } from 'react';
 import { Button, RadioGroup, TextArea, TextField, Theme } from "@radix-ui/themes";
 import { saveJobAction } from "@/app/actions/jobActions";
@@ -10,7 +10,7 @@ import ImageUpload from "@/app/components/ImageUpload";
 import { CitySelect, CountrySelect, StateSelect } from "react-country-state-city";
 
 export default function JobForm({ jobDoc }: { jobDoc?: any }) {
-    const router = useRouter();
+    const searchParams = useSearchParams();  // Use useSearchParams to access URL query parameters
     const [orgId, setOrgId] = useState<string | undefined>(undefined);
     const [countryid, setCountryid] = useState(jobDoc?.countryId || 0);
     const [stateid, setStateid] = useState(jobDoc?.stateId || 0);
@@ -21,12 +21,12 @@ export default function JobForm({ jobDoc }: { jobDoc?: any }) {
 
     // useEffect to ensure that orgId is set only after the component is mounted
     useEffect(() => {
-        const { orgId } = router.query;
+        const orgId = searchParams.get('orgId');  // Extract orgId from query params
 
         if (orgId) {
-            setOrgId(orgId as string); // Cast to string if it's present
+            setOrgId(orgId); // Set the orgId from the query parameter
         }
-    }, [router.query]);
+    }, [searchParams]);
 
     // Handle the case when orgId is not yet available
     if (!orgId) {
@@ -49,7 +49,7 @@ export default function JobForm({ jobDoc }: { jobDoc?: any }) {
         data.set('countryId', countryid.toString());
         data.set('stateId', stateid.toString());
         data.set('cityId', cityId.toString());
-        data.set('orgId', orgId); // Use the orgId extracted from the URL
+        data.set('orgId', orgId); // Use the orgId extracted from the query parameters
 
         console.log("Saving job with data:", Object.fromEntries(data.entries()));
 
@@ -57,7 +57,7 @@ export default function JobForm({ jobDoc }: { jobDoc?: any }) {
         const savedJobDoc = await saveJobAction(data);
 
         // Redirect after saving
-        router.replace(`/jobs/${savedJobDoc.orgId}`);
+        window.location.href = `/jobs/${savedJobDoc.orgId}`;  // Perform client-side redirect
     }
 
     return (

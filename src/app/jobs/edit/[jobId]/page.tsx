@@ -26,6 +26,6 @@ export default async function EditJobPage(pageProps:PageProps){
 
     })
     return(
-        <JobForm orgId = {jobDoc.orgId} jobDoc = {jobDoc} />
+        <JobForm jobDoc={jobDoc} />
     );
 }

@@ -31,8 +31,8 @@ export default function JobForm({ jobDoc }: { jobDoc?: any }) {
     const [contactEmail, setContactEmail] = useState(jobDoc?.contactEmail || '');
 
     useEffect(() => {
-        console.log('Params object:', params);  // Log the params object to see if orgId is present
-        const pathOrgId = params?.orgId;  // Extract orgId from the URL params
+        console.log('Params object:', params);  // Log the params object to see if orgid is present
+        const pathOrgId = params?.orgid;  // Extract orgid from the URL params
 
         if (typeof pathOrgId === 'string') {
             setOrgId(pathOrgId);  // Set the orgId from the path
@@ -41,8 +41,8 @@ export default function JobForm({ jobDoc }: { jobDoc?: any }) {
             setOrgId(pathOrgId[0]);  // Take the first element if it's an array
             setLoading(false);
         } else {
-            console.error("orgId not found in URL params");
-            setLoading(false);  // Exit loading even if orgId is not found to prevent infinite loading
+            console.error("orgid not found in URL params");
+            setLoading(false);  // Exit loading even if orgid is not found to prevent infinite loading
         }
     }, [params]);
 

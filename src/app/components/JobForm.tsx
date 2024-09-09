@@ -1,6 +1,6 @@
 'use client';  // Mark the component as a client component
 
-import { useSearchParams } from 'next/navigation';  // Use useSearchParams to get query parameters
+import { useRouter } from 'next/navigation';  // Use useRouter to get orgId from the URL path
 import { useEffect, useState } from 'react';
 import { Button, RadioGroup, TextArea, TextField, Theme } from "@radix-ui/themes";
 import { saveJobAction } from "@/app/actions/jobActions";
@@ -10,7 +10,7 @@ import ImageUpload from "@/app/components/ImageUpload";
 import { CitySelect, CountrySelect, StateSelect } from "react-country-state-city";
 
 export default function JobForm({ jobDoc }: { jobDoc?: any }) {
-    const searchParams = useSearchParams();  // Use useSearchParams to access URL query parameters
+    const router = useRouter();  // Use useRouter to access URL params
     const [orgId, setOrgId] = useState<string | undefined>(undefined);
     const [loading, setLoading] = useState(true);  // Set initial loading state
     const [countryid, setCountryid] = useState(jobDoc?.countryId || 0);
@@ -22,17 +22,17 @@ export default function JobForm({ jobDoc }: { jobDoc?: any }) {
 
     // useEffect to ensure that orgId is set only after the component is mounted
     useEffect(() => {
-        const orgIdFromParams = searchParams.get('orgId');  // Extract orgId from query params
-        console.log('Extracted orgId from URL:', orgIdFromParams);  // Debugging: log orgId
+        const pathOrgId = router.query.orgId;  // Extract orgId from the URL path
+        console.log('Extracted orgId from URL path:', pathOrgId);  // Debugging: log orgId
 
-        if (orgIdFromParams) {
-            setOrgId(orgIdFromParams); // Set the orgId from the query parameter
+        if (pathOrgId) {
+            setOrgId(pathOrgId as string); // Set the orgId from the path
             setLoading(false);  // Exit the loading state
         } else {
-            console.error("orgId not found in query parameters");
+            console.error("orgId not found in URL path");
             setLoading(false);  // Exit loading even if orgId is not found to prevent infinite loading
         }
-    }, [searchParams]);
+    }, [router.query]);
 
     // Handle the case when orgId is not yet available or there's a loading issue
     if (loading) {

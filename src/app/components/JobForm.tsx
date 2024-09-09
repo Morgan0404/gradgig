@@ -58,6 +58,7 @@ export default function JobForm({ orgId, jobDoc }: { orgId: string; jobDoc?: Job
             // Use router.replace to update the URL without navigating
             router.replace(`/jobs/${jobDoc.orgId}`);
         } catch (error) {
+            // @ts-ignore
             console.error("Failed to save job:", error.message);
         }
     }

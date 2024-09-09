@@ -1,23 +1,15 @@
-'use client';  // Ensure this file is a client component
-
-import { Button, RadioGroup, Text, TextArea, TextField, Theme } from "@radix-ui/themes";
-import { useState, useEffect } from "react";
-import { useRouter } from 'next/navigation';  // Updated useRouter for app directory
-import "react-country-state-city/dist/react-country-state-city.css";
-
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { Button, RadioGroup, TextArea, TextField, Theme } from "@radix-ui/themes";
 import { saveJobAction } from "@/app/actions/jobActions";
-import "react-country-state-city/dist/react-country-state-city.css";
-import type { Job } from "@/models/Job";
-import {
-    CitySelect,
-    CountrySelect,
-    StateSelect,
-} from "react-country-state-city";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEnvelope, faMobile, faPhone, faStar, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope, faPhone, faStar, faUser } from "@fortawesome/free-solid-svg-icons";
 import ImageUpload from "@/app/components/ImageUpload";
+import { CitySelect, CountrySelect, StateSelect } from "react-country-state-city";
 
-export default function JobForm({ jobDoc }: { jobDoc?: Job }) {
+export default function JobForm({ jobDoc }: { jobDoc?: any }) {
+    const router = useRouter();
+    const [orgId, setOrgId] = useState<string | undefined>(undefined);
     const [countryid, setCountryid] = useState(jobDoc?.countryId || 0);
     const [stateid, setStateid] = useState(jobDoc?.stateId || 0);
     const [cityId, setCityId] = useState(jobDoc?.cityId || 0);
@@ -25,25 +17,27 @@ export default function JobForm({ jobDoc }: { jobDoc?: Job }) {
     const [stateName, setStateName] = useState(jobDoc?.state || '');
     const [cityName, setCityName] = useState(jobDoc?.city || '');
 
-    const router = useRouter();
+    // useEffect to ensure that orgId is set only after the component is mounted
     // @ts-ignore
-    const orgId = router.query.orgId;  // Extract orgId from the URL
-
-    // Log the orgId for debugging
+    // @ts-ignore
+    // @ts-ignore
     useEffect(() => {
-        console.log("Extracted Organization ID from URL:", orgId);
-    }, [orgId]);
+        // @ts-ignore
+        const { orgId } = router.query;
 
-    // Ensure orgId is not undefined or missing
-    if (!orgId || orgId === 'undefined') {
-        return <Text color="red">Invalid Organization ID. Please log in or select an organization.</Text>;
+        if (orgId) {
+            setOrgId(orgId as string); // Cast to string if it's present
+        }
+        // @ts-ignore
+
+    }, [router.query]);
+
+    // Handle the case when orgId is not yet available
+    if (!orgId) {
+        return <div>Loading...</div>; // Show a loading state until orgId is available
     }
 
     async function handleSaveJob(data: FormData) {
-        // Log to check if the orgId is passed correctly
-        console.log("Handling save with Organization ID:", orgId);
-
-        // Check required fields
         if (!stateName) {
             console.error("State is required.");
             return;
@@ -53,37 +47,33 @@ export default function JobForm({ jobDoc }: { jobDoc?: Job }) {
             return;
         }
 
-        // Set form data fields
         data.set('country', countryName.toString());
         data.set('state', stateName.toString());
         data.set('city', cityName.toString());
         data.set('countryId', countryid.toString());
         data.set('stateId', stateid.toString());
         data.set('cityId', cityId.toString());
-        data.set('orgId', orgId);  // Use the orgId extracted from URL
+        data.set('orgId', orgId); // Use the orgId extracted from the URL
 
         console.log("Saving job with data:", Object.fromEntries(data.entries()));
 
         // Save job using the action
-        const jobDoc = await saveJobAction(data);
+        const savedJobDoc = await saveJobAction(data);
 
         // Redirect after saving
-        router.replace(`/jobs/${jobDoc.orgId}`);
+        router.replace(`/jobs/${savedJobDoc.orgId}`);
     }
 
     return (
         <Theme>
             <form
                 onSubmit={(e) => {
-                    e.preventDefault();  // Prevent default form submission behavior
-                    const formData = new FormData(e.currentTarget);  // Capture form data
-                    handleSaveJob(formData);  // Call save function
+                    e.preventDefault(); // Prevent default form submission behavior
+                    const formData = new FormData(e.currentTarget); // Capture form data
+                    handleSaveJob(formData); // Call save function
                 }}
                 className="container mt-6 flex flex-col gap-4"
             >
-                {jobDoc && (
-                    <input type="hidden" name="id" value={jobDoc?._id} />
-                )}
                 <TextField.Root name="title" placeholder="Job title" defaultValue={jobDoc?.title || ''} />
 
                 <div className="grid sm:grid-cols-3 gap-6 *:grow">
@@ -106,15 +96,12 @@ export default function JobForm({ jobDoc }: { jobDoc?: Job }) {
                     <div>
                         Salary
                         <TextField.Root name="salary" defaultValue={jobDoc?.salary || ''}>
-                            <TextField.Slot>
-                                $
-                            </TextField.Slot>
-                            <TextField.Slot>
-                                K/year
-                            </TextField.Slot>
+                            <TextField.Slot>$</TextField.Slot>
+                            <TextField.Slot>K/year</TextField.Slot>
                         </TextField.Root>
                     </div>
                 </div>
+
                 <div>
                     Location
                     <div className="flex flex-col sm:flex-row gap-4 *:grow">
@@ -147,6 +134,7 @@ export default function JobForm({ jobDoc }: { jobDoc?: Job }) {
                         />
                     </div>
                 </div>
+
                 <div className="sm:flex">
                     <div className="w-1/3">
                         <h3>Job icon</h3>
@@ -199,6 +187,7 @@ export default function JobForm({ jobDoc }: { jobDoc?: Job }) {
                     resize="vertical"
                     name="description"
                 />
+
                 <div className="flex justify-center">
                     <Button size="3">
                         <span className="px-8">Save</span>

@@ -25,9 +25,13 @@ export default function JobForm({ jobDoc }: { jobDoc?: any }) {
         const pathOrgId = params.orgId;  // Extract orgId from the URL params
         console.log('Extracted orgId from URL params:', pathOrgId);  // Debugging: log orgId
 
-        if (pathOrgId) {
+        // Ensure orgId is a string, handle arrays
+        if (typeof pathOrgId === 'string') {
             setOrgId(pathOrgId); // Set the orgId from the path
             setLoading(false);  // Exit the loading state
+        } else if (Array.isArray(pathOrgId)) {
+            setOrgId(pathOrgId[0]);  // Take the first element if it's an array
+            setLoading(false);
         } else {
             console.error("orgId not found in URL params");
             setLoading(false);  // Exit loading even if orgId is not found to prevent infinite loading

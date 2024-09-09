@@ -12,6 +12,7 @@ import { CitySelect, CountrySelect, StateSelect } from "react-country-state-city
 export default function JobForm({ jobDoc }: { jobDoc?: any }) {
     const searchParams = useSearchParams();  // Use useSearchParams to access URL query parameters
     const [orgId, setOrgId] = useState<string | undefined>(undefined);
+    const [loading, setLoading] = useState(true);  // Set initial loading state
     const [countryid, setCountryid] = useState(jobDoc?.countryId || 0);
     const [stateid, setStateid] = useState(jobDoc?.stateId || 0);
     const [cityId, setCityId] = useState(jobDoc?.cityId || 0);
@@ -22,15 +23,24 @@ export default function JobForm({ jobDoc }: { jobDoc?: any }) {
     // useEffect to ensure that orgId is set only after the component is mounted
     useEffect(() => {
         const orgIdFromParams = searchParams.get('orgId');  // Extract orgId from query params
+        console.log('Extracted orgId from URL:', orgIdFromParams);  // Debugging: log orgId
 
         if (orgIdFromParams) {
             setOrgId(orgIdFromParams); // Set the orgId from the query parameter
+            setLoading(false);  // Exit the loading state
+        } else {
+            console.error("orgId not found in query parameters");
+            setLoading(false);  // Exit loading even if orgId is not found to prevent infinite loading
         }
     }, [searchParams]);
 
-    // Handle the case when orgId is not yet available
-    if (!orgId) {
+    // Handle the case when orgId is not yet available or there's a loading issue
+    if (loading) {
         return <div>Loading...</div>; // Show a loading state until orgId is available
+    }
+
+    if (!orgId) {
+        return <div>Error: Organization ID not found.</div>;  // Display error if orgId is missing
     }
 
     async function handleSaveJob(data: FormData) {

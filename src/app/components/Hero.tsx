@@ -18,9 +18,9 @@ export default function Hero({ onSearch }: HeroProps) {
     };
 
     return (
-        <section className="container my-16">
+        <section className="fade-in container my-16">
             <h1 className="mb-4 text-lg font-extrabold text-gray-900 dark:text-white md:text-4xl md:text-5xl max-w-lg mx-auto text-center">
-    <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-blue-500 to-green-400 whitespace-nowrap animate-moving-gradient bg-[length:200%]">
+    <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-green-400 to-green-600 whitespace-nowrap animate-moving-gradient bg-[length:200%]">
       Empowering Your Future,
     </span>
                 <span className="block">
@@ -40,7 +40,7 @@ export default function Hero({ onSearch }: HeroProps) {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <button className="text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 py-2 px-4 rounded-md">
+                <button className="text-white bg-gradient-to-br from-gray-900 to-gray-900 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 py-2 px-4 rounded-md">
                     Search
                 </button>
             </form>

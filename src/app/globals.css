@@ -5,3 +5,19 @@
 body{
     @apply text-gray-900;
 }
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Utility class to apply the fade-in animation */
+.fade-in {
+    opacity: 0;
+    animation: fadeInUp 1s forwards;
+}

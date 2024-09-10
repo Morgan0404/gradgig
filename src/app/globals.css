@@ -21,3 +21,6 @@ body{
     opacity: 0;
     animation: fadeInUp 1s forwards;
 }
+body {
+    background-color: white; /* You can replace this with your preferred color (gray) */
+}

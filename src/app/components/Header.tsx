@@ -6,7 +6,7 @@ export default async function Header() {
     const signInUrl = await getSignInUrl();
     return (
         <header>
-            <div className="container flex items-center justify-between mx-auto my-4">
+            <div className="fade-in container flex items-center justify-between mx-auto my-4">
                 
                 <div className="flex items-center gap-4">
                     <Link href={'/'} className="font-bold text-3xl bg-clip-text text-transparent bg-gradient-to-br from-gray-900 to-gray-900">
